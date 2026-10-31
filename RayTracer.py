@@ -35,7 +35,7 @@ def main():
     start_button_2 = Classes.Button("GAME MODE",640,510,150,50)
     restart_button = Classes.Button("PLAY AGAIN",440,510,150,80)
     welcome_text = Classes.Label("WELCOME TO RAY TRACER",50,200,80)
-    game_over_text = Classes.Label("GAME OVER",50,50,80)
+    game_over_text = Classes.Label("GAME OVER",300,300,80)
     while running:
         mouse_pos = pygame.mouse.get_pos()
         mouse_pos = Classes.Point(mouse_pos[0],mouse_pos[1])

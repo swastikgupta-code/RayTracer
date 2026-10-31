@@ -55,7 +55,7 @@ ini_pos = Point(100,360)
 class Ray:
     def __init__(self,dir,size=10.0,pos=ini_pos,color=(0.8,0.2,0.4,1)):
         self.dir = Point(dir.x,dir.y).norm()
-        self.speed = 240
+        self.speed = 420
         self.size = size
         self.start = Point(pos.x,pos.y)
         self.end = self.start.add(self.dir.mul(self.size))
