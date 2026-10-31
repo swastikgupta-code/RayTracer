@@ -9,9 +9,15 @@ import states
 screen = None
 class Point:
     def __init__(self,x,y):
-        self.x = x
-        self.y = y
-        self.mag = math.sqrt(x**2+y**2)
+        if(x is None):
+            self.x = random.uniform(0,1080)
+        else:
+            self.x = x
+        if(y is None):
+            self.y = random.uniform(0,720)
+        else:
+            self.y = y
+        self.mag = math.sqrt(self.x**2+self.y**2)
 
     def add(self,point):
         x = self.x + point.x
@@ -50,14 +56,16 @@ class Point:
 
     def copy(self):
         return Point(self.x,self.y)
-ini_pos = Point(100,360)
     
 class Ray:
-    def __init__(self,dir,size=10.0,pos=ini_pos,color=(0.8,0.2,0.4,1)):
+    def __init__(self,dir,size=10.0,pos=None,color=(0.8,0.2,0.4,1)):
         self.dir = Point(dir.x,dir.y).norm()
         self.speed = 420
         self.size = size
-        self.start = Point(pos.x,pos.y)
+        if(pos is None):
+            self.start = Point(None,None)
+        else:
+            self.start = Point(pos.x,pos.y)
         self.end = self.start.add(self.dir.mul(self.size))
         self.mid = self.start.add(self.end).mul(1/2)
         self.color = color
@@ -92,7 +100,7 @@ class Ray:
         self.size += ds*rate
 
 class Arc:
-    def __init__(self,angle,rad,pos=ini_pos,start=None,color=(0.7,0.5,0.1)):
+    def __init__(self,angle,rad,pos=None,start=None,color=(0.7,0.5,0.1)):
         self.rad = rad
         if(start is None):
             self.start_angle = (angle/2) % (2 * math.pi)
@@ -100,7 +108,10 @@ class Arc:
         else:
             self.start_angle = start % (2*math.pi)
             self.end_angle = (start+angle) % (2*math.pi)
-        self.mid = Point(pos.x,pos.y)
+        if(pos is None):
+            self.mid = Point(None,None)
+        else:
+            self.mid = Point(pos.x,pos.y)
         self.size = rad
         self.color = color
 
@@ -245,7 +256,7 @@ class Dragable:
 class Ray_Shooter(Dragable):
     def __init__(self,color=(0.9,0.1,0.3)):
         self.rad = 15
-        self.mid = Point(ini_pos.x,ini_pos.y)
+        self.mid = Point(None,None)
         self.dragging = False
         self.color = color
 
@@ -447,8 +458,9 @@ class Label:
 class Player:
     def __init__(self,pos=None,col=(23,50,100)):
         if(pos is None):
-            pos=(random.uniform(0,1080),random.uniform(0,720))
-        self.pos = Point(pos[0],pos[1])
+            self.pos = Point(None,None)
+        else:
+            self.pos = Point(pos[0],pos[1])
         self.step = 4
         self.color = col
         self.health = states.max_player_health
