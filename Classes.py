@@ -55,7 +55,7 @@ ini_pos = Point(100,360)
 class Ray:
     def __init__(self,dir,size=10.0,pos=ini_pos,color=(0.8,0.2,0.4,1)):
         self.dir = Point(dir.x,dir.y).norm()
-        self.speed = 600
+        self.speed = 240
         self.size = size
         self.start = Point(pos.x,pos.y)
         self.end = self.start.add(self.dir.mul(self.size))
@@ -346,11 +346,11 @@ class Material:
         return None
     
 class Button:
-    def __init__(self, text, x, y, width, height):
+    def __init__(self, text, x, y, width, height,size=24):
         if not pygame.font.get_init():
             pygame.font.init()
             
-        self.font = pygame.font.SysFont("Arial", 24, bold=True)
+        self.font = pygame.font.SysFont("Arial", size, bold=True)
         self.text = text
         self.rect = pygame.Rect(x, y, width, height)
         self.color = (233, 22, 100)
@@ -400,15 +400,49 @@ class Button:
         glBindTexture(GL_TEXTURE_2D, 0)
         glDisable(GL_TEXTURE_2D)
 class Label:
-    def __init__(self,text,x,y,width,height,color=(255,255,255)):
+    def __init__(self,text,x,y,size,color=(1,1,1)):
+        if not pygame.font.get_init():
+            pygame.font.init()
+            
+        self.font = pygame.font.SysFont("Arial", size, bold=True)
         self.text = text
-        self.rect = pygame.Rect(x,y,width,height)
-        font = pygame.font.SysFont("Arial", int(height/5))
-        self.text_surf = font.render(text,True,color)
-        self.text_rect = self.text_surf.get_rect(center=self.rect.center)
+        self.color = color
+        self.pos = Point(x,y)
+        self.tex_id, self.tex_w, self.tex_h = self.create_text_texture()
+
+    def create_text_texture(self):
+        surf = self.font.render(self.text, True, (255, 255, 255))
+        w, h = surf.get_size()
+        data = pygame.image.tobytes(surf, "RGBA", True)
+
+        tex_id = glGenTextures(1)
+        glBindTexture(GL_TEXTURE_2D, tex_id)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data)
+        glBindTexture(GL_TEXTURE_2D, 0)
+        
+        return tex_id,w,h
 
     def draw(self):
-        screen.blit(self.text_surf,self.text_rect)
+        while glGetError() != GL_NO_ERROR:
+            pass
+        text_x = self.pos.x
+        text_y = self.pos.y
+
+        glEnable(GL_TEXTURE_2D)
+        glBindTexture(GL_TEXTURE_2D, self.tex_id)
+        glColor3f(*self.color)
+
+        glBegin(GL_QUADS)
+        glTexCoord2f(0.0, 1.0); glVertex2f(text_x, text_y)
+        glTexCoord2f(1.0, 1.0); glVertex2f(text_x + self.tex_w, text_y)
+        glTexCoord2f(1.0, 0.0); glVertex2f(text_x + self.tex_w, text_y + self.tex_h)
+        glTexCoord2f(0.0, 0.0); glVertex2f(text_x, text_y + self.tex_h)
+        glEnd()
+
+        glBindTexture(GL_TEXTURE_2D, 0)
+        glDisable(GL_TEXTURE_2D)
 
 class Player:
     def __init__(self,pos=None,col=(23,50,100)):
