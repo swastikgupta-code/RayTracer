@@ -22,6 +22,7 @@ clock = pygame.time.Clock()
 def main():
     running = True
     dt=0.0
+    level = 1
     prev = 0
     scene = 0
     rays = []
@@ -36,6 +37,7 @@ def main():
     restart_button = Classes.Button("PLAY AGAIN",440,510,150,80)
     welcome_text = Classes.Label("WELCOME TO RAY TRACER",50,200,80)
     game_over_text = Classes.Label("GAME OVER",300,300,80)
+    level_text = Classes.Label("LEVEL 1",500,10,20)
     while running:
         mouse_pos = pygame.mouse.get_pos()
         mouse_pos = Classes.Point(mouse_pos[0],mouse_pos[1])
@@ -99,6 +101,8 @@ def main():
                 elif(scene==2):
                      if(restart_button.is_close(mouse_pos)):
                          scene=1
+                         level += 1
+                         level_text.change_text("LEVEL " + str(level))
                          players = players[0].next_gen(players)
             elif event.type == pygame.MOUSEMOTION:
                 if(scene==1):
@@ -156,6 +160,7 @@ def main():
 
         elif(scene==1):
             if(states.game_mode==2):
+                level_text.draw()
                 if(counter==9):
                     for player in players:
                         if(player.is_alive):

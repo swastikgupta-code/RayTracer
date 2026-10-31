@@ -435,6 +435,10 @@ class Label:
         
         return tex_id,w,h
 
+    def change_text(self,new_text):
+        self.text = new_text
+        self.tex_id, self.tex_w, self.tex_h = self.create_text_texture()
+
     def draw(self):
         while glGetError() != GL_NO_ERROR:
             pass
