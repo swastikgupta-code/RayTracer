@@ -9,12 +9,13 @@ import states
 screen = None
 class Point:
     def __init__(self,x,y):
+        gap = 20
         if(x is None):
-            self.x = random.uniform(0,1080)
+            self.x = random.uniform(gap,1080-gap)
         else:
             self.x = x
         if(y is None):
-            self.y = random.uniform(0,720)
+            self.y = random.uniform(gap,720-gap)
         else:
             self.y = y
         self.mag = math.sqrt(self.x**2+self.y**2)
@@ -60,7 +61,7 @@ class Point:
 class Ray:
     def __init__(self,dir,size=10.0,pos=None,color=(0.8,0.2,0.4,1)):
         self.dir = Point(dir.x,dir.y).norm()
-        self.speed = 420
+        self.speed = 100
         self.size = size
         if(pos is None):
             self.start = Point(None,None)

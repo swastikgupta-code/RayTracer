@@ -137,20 +137,7 @@ def main():
                         mat.dragging = False
             elif event.type == pygame.KEYDOWN:
                 if(scene==1):
-                    if event.key == pygame.K_f:
-                        drags.append(Classes.Dragable(Classes.Ray(Classes.Point(1,0),100)))
-                    elif event.key == pygame.K_g:
-                        drags.append(Classes.Dragable(Classes.Arc(1.5,100)))
-                    elif event.key == pygame.K_h:
-                        shooters.append(Classes.Ray_Shooter())
-                    elif event.key == pygame.K_j:
-                        mats.append(Classes.Material(1.33))
-                    elif event.key == pygame.K_q:
-                        if(states.is_collision_mode):
-                            states.is_collision_mode = False
-                        else:
-                            states.is_collision_mode = True
-                    elif event.key == pygame.K_DELETE:
+                    if event.key == pygame.K_DELETE:
                         for drag in drags:
                             if(drag.is_close(mouse_pos)):
                                 drags.remove(drag)
@@ -160,6 +147,20 @@ def main():
                         for mat in mats:
                             if(mat.is_point_inside(mouse_pos)):
                                 mats.remove(mat)
+                    elif (len(drags)+len(shooters)+len(mats))<4:
+                        if event.key == pygame.K_f:
+                            drags.append(Classes.Dragable(Classes.Ray(Classes.Point(1,0),100)))
+                        elif event.key == pygame.K_g:
+                            drags.append(Classes.Dragable(Classes.Arc(1.5,100)))
+                        elif event.key == pygame.K_h:
+                            shooters.append(Classes.Ray_Shooter())
+                        elif event.key == pygame.K_j:
+                            mats.append(Classes.Material(1.33))
+                    elif event.key == pygame.K_q:
+                        if(states.is_collision_mode):
+                            states.is_collision_mode = False
+                        else:
+                            states.is_collision_mode = True
         if(scene==0):
             start_button.draw()
             start_button_2.draw()
