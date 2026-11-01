@@ -3,6 +3,8 @@ import Classes
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
+import pickle
+import os
 import states
 default_cursor = pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_ARROW)
 motion_cursor = pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_SIZEALL)
@@ -45,6 +47,7 @@ def main():
         for event in pygame.event.get():
             if(event.type == pygame.QUIT):
                 running = False
+                save(players,level)
             elif(event.type == pygame.MOUSEWHEEL):
                 if(scene==1):
                     for drag_test in drags:
@@ -73,6 +76,10 @@ def main():
                         states.game_mode = 2
                         for i in range(10):
                             players.append(Classes.Player())
+                        lv = load(players)
+                        if(not lv is None):
+                            level = lv
+                            level_text.change_text("LEVEL " + str(level))
                 elif(scene==1):
                     if(event.button in (4,5,6,7)):
                         continue
@@ -230,5 +237,37 @@ def main():
             restart_button.draw()
             game_over_text.draw()
         pygame.display.flip()
+
+def save(players,level,filename='save_file.pkl'):
+    brain_data = []
+    for player in players:
+        brain_data.append({
+            'weights_ih':player.brain.weights_ih,
+            'weights_ho':player.brain.weights_ho
+        })
+    save_data = {
+        'level' : level,
+        'brain_data' : brain_data
+    }
+    with open(filename,'wb') as f:
+        pickle.dump(save_data,f)
+    print("saved")
+
+def load(players,filename='save_file.pkl'):
+    if not os.path.exists(filename):
+        return
+
+    with open(filename,'rb') as f:
+        save_data = pickle.load(f)
+
+    brain_data = save_data['brain_data']
+    level = save_data['level']
+
+    for i in range(min(len(players),len(brain_data))):
+        players[i].brain.weights_ih = brain_data[i]['weights_ih']
+        players[i].brain.weights_ho = brain_data[i]['weights_ho']
+    print("loaded")
+    return level
+    
 main()
 pygame.quit()
