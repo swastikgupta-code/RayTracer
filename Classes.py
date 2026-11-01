@@ -509,9 +509,8 @@ class Player:
         target_y = self.pos.y + move[1]
         target_x = max(20,min(target_x,1080-20))
         target_y = max(20,min(target_y,720-20))
-        actual_move = [target_x-self.pos.x,target_y-self.pos.y]
-        self.pos.x += actual_move[0]
-        self.pos.y += actual_move[1]
+        actual_move = Point(target_x-self.pos.x,target_y-self.pos.y).norm().mul(self.step)
+        self.pos = self.pos.add(actual_move)
         self.collider.move(actual_move)
  
     def next_gen(self,dead_players):
@@ -648,12 +647,9 @@ class Capsule:
         return True
 
     def move(self,move):
-        self.top.x += move[0]
-        self.top.y += move[1]
-        self.bottom.x += move[0]
-        self.bottom.y += move[1]
-        self.pos.x += move[0]
-        self.pos.y += move[1]
+        self.top = self.top.add(move)
+        self.bottom = self.bottom.add(move)
+        self.pos = self.pos.add(move)
 
     def draw(self,segments=60):
         glColor4f(0,0.1,0.4,0.3)
