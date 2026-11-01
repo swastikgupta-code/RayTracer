@@ -731,6 +731,7 @@ class Slider:
             return
         self.val = val
         self.cen.x = point.x
+        states.speed = 40+320*self.val
 
     def draw(self,segments=60):
         w = self.rect.x + self.rect.width*self.val

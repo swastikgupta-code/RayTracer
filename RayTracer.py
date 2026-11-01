@@ -125,7 +125,7 @@ def main():
                          players = players[0].next_gen(players)
                 elif(scene==3):
                     if(back.is_close(mouse_pos)):
-                        scene = 1
+                        scene = 0
                     elif(speed_slider.is_close(mouse_pos)):
                         speed_slider.is_sliding = True
             elif event.type == pygame.MOUSEMOTION:
