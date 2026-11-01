@@ -1,3 +1,9 @@
+### Important Note: ### 
+i have changed my github account name because it was too unprofessional and i am using this github to apply for colleges
+- Previous Name: smkillerz777-star
+- Current Name: swastikgupta-code
+
+So please won't reject it due to this issue
 # Readme for Week 1
 
 # Ray Tracer
