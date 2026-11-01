@@ -178,7 +178,7 @@ def main():
                         for mat in mats:
                             if(mat.is_point_inside(mouse_pos)):
                                 mats.remove(mat)
-                    elif (len(drags)+len(shooters)+len(mats))<4:
+                    elif ((len(drags)+len(shooters)+len(mats))<4 or states.game_mode==1):
                         if event.key == pygame.K_f:
                             drags.append(Classes.Dragable(Classes.Ray(Classes.Point(1,0),100)))
                         elif event.key == pygame.K_g:
