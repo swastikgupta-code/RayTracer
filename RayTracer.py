@@ -36,6 +36,7 @@ def main():
     start_button = Classes.Button("SIMULATION MODE",280,510,200,50)
     start_button_2 = Classes.Button("GAME MODE",640,510,150,50)
     restart_button = Classes.Button("PLAY AGAIN",440,510,150,80)
+    back = Classes.Button("BACK",0,0,80,40)
     welcome_text = Classes.Label("WELCOME TO RAY TRACER",50,200,80)
     game_over_text = Classes.Label("GAME OVER",300,300,80)
     level_text = Classes.Label("LEVEL 1",500,10,20)
@@ -82,6 +83,13 @@ def main():
                 elif(scene==1):
                     if(event.button in (4,5,6,7)):
                         continue
+                    if(back.is_close(mouse_pos)):
+                        scene = 0
+                        save(players,level)
+                        players = []
+                        drags = []
+                        shooters = []
+                        mats = []
                     for drag_test in drags:
                         if drag_test.is_close(event_pos):
                             if event.button == 1:
@@ -166,6 +174,7 @@ def main():
             welcome_text.draw()
 
         elif(scene==1):
+            back.draw()
             if(states.game_mode==2):
                 level_text.draw()
                 for player in players:
