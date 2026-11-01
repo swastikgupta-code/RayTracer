@@ -473,6 +473,8 @@ class Player:
         self.brain = Brain(8,10,2)
         self.fitness = 0
         self.is_alive = True
+        self.frame_stuck = 0
+        self.last_pos = Point(self.pos.x,self.pos.y)
 
     def format_input(self,rays,n=60):
         inputs = []
@@ -512,8 +514,15 @@ class Player:
         actual_move = Point(target_x-self.pos.x,target_y-self.pos.y)
         self.pos = self.pos.add(actual_move)
         self.collider.move(actual_move)
-        print(actual_move.mag/self.step)
-        self.fitness += actual_move.mag/self.step
+        self.fitness += 1
+        dist = self.pos.dis(self.last_pos)
+        if(dist<0.5):
+            self.frame_stuck += 1
+        else:
+            self.frame_stuck = 0
+        self.last_pos = self.pos.copy()
+        if(self.frame_stuck>60):
+            self.is_alive = False
  
     def next_gen(self,dead_players):
         dead_players.sort(key=lambda p:p.fitness,reverse=True)
@@ -523,7 +532,7 @@ class Player:
         champ_clone.brain = champ.brain.clone()
         new_pop.append(champ_clone)
 
-        for i in range(9):
+        for i in range(49):
             child = Player()
             child.brain = champ.brain.clone()
             child.brain.mutate()

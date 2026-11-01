@@ -73,7 +73,7 @@ def main():
                     elif(start_button_2.is_close(mouse_pos)):
                         scene = 1
                         states.game_mode = 2
-                        for i in range(10):
+                        for i in range(50):
                             players.append(Classes.Player())
                         lv = load(players)
                         if(not lv is None):
