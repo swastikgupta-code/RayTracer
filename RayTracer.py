@@ -35,8 +35,9 @@ def main():
     glClearColor(0.1,0.5,0.4,1.0)
     start_button = Classes.Button("SIMULATION MODE",280,510,200,50)
     start_button_2 = Classes.Button("GAME MODE",640,510,150,50)
-    restart_button = Classes.Button("PLAY AGAIN",440,510,150,80)
+    restart_button = Classes.Button("PLAY AGAIN",600,510,150,80)
     back = Classes.Button("BACK",0,0,80,40)
+    return_button = Classes.Button("RETURN TO MENU",200,510,250,80)
     setting = Classes.Button("SETTINGS",0,0,150,40)
     welcome_text = Classes.Label("WELCOME TO RAY TRACER",50,200,80)
     game_over_text = Classes.Label("GAME OVER",300,300,80)
@@ -79,12 +80,16 @@ def main():
                     elif(start_button_2.is_close(mouse_pos)):
                         scene = 1
                         states.game_mode = 2
+                        py = players
                         for i in range(states.number):
                             players.append(Classes.Player())
                         lv = load(players)
                         if(not lv is None):
-                            level = lv
-                            level_text.change_text("LEVEL " + str(level))
+                            if(level>lv):
+                                players = py
+                            else:
+                                level = lv
+                                level_text.change_text("LEVEL " + str(level))
                     elif(setting.is_close(mouse_pos)):
                         scene = 3
                 elif(scene==1):
@@ -120,11 +125,17 @@ def main():
                                 for shooter in shooters:
                                     rays.append(Classes.Ray(Classes.Point(event_pos.x-shooter.mid.x,event_pos.y-shooter.mid.y),pos=shooter.mid))
                 elif(scene==2):
-                     if(restart_button.is_close(mouse_pos)):
-                         scene=1
-                         level += 1
-                         level_text.change_text("LEVEL " + str(level))
-                         players = players[0].next_gen(players)
+                    if(restart_button.is_close(mouse_pos)):
+                        scene=1
+                        level += 1
+                        level_text.change_text("LEVEL " + str(level))
+                        players = players[0].next_gen(players)
+                    elif(return_button.is_close(mouse_pos)):
+                        scene = 0
+                        level += 1
+                        level_text.change_text("LEVEL " + str(level))
+                        players = players[0].next_gen(players)
+
                 elif(scene==3):
                     if(back.is_close(mouse_pos)):
                         scene = 0
@@ -267,6 +278,7 @@ def main():
         elif scene==2:
             restart_button.draw()
             game_over_text.draw()
+            return_button.draw()
         elif scene==3:
             back.draw()
             speed_slider.draw()
