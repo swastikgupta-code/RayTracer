@@ -509,9 +509,11 @@ class Player:
         target_y = self.pos.y + move[1]
         target_x = max(20,min(target_x,1080-20))
         target_y = max(20,min(target_y,720-20))
-        actual_move = Point(target_x-self.pos.x,target_y-self.pos.y).norm().mul(self.step)
+        actual_move = Point(target_x-self.pos.x,target_y-self.pos.y)
         self.pos = self.pos.add(actual_move)
         self.collider.move(actual_move)
+        print(actual_move.mag/self.step)
+        self.fitness += actual_move.mag/self.step
  
     def next_gen(self,dead_players):
         dead_players.sort(key=lambda p:p.fitness,reverse=True)
