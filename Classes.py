@@ -61,7 +61,7 @@ class Point:
 class Ray:
     def __init__(self,dir,size=10.0,pos=None,color=(0.8,0.2,0.4,1)):
         self.dir = Point(dir.x,dir.y).norm()
-        self.speed = 200
+        self.speed = states.speed
         self.size = size
         if(pos is None):
             self.start = Point(None,None)
@@ -466,7 +466,7 @@ class Player:
             self.pos = Point(None,None)
         else:
             self.pos = Point(pos[0],pos[1])
-        self.step = 4
+        self.step = states.speed/40
         self.color = col
         self.health = states.max_player_health
         self.collider = Capsule(52,23,self.pos.add(Point(0,8)))
@@ -711,3 +711,29 @@ class Brain:
     def mutate(self,mutation_rate = 0.1):
         self.weights_ih += np.random.randn(*self.weights_ih.shape)*mutation_rate
         self.weights_ho += np.random.randn(*self.weights_ho.shape)*mutation_rate
+
+class Slider:
+    def __init__(self,x,y,width,height,val=0):
+        self.rect = pygame.Rect(x,y,width,height)
+        self.val = val
+
+    def draw(self,segments=60):
+        w = self.rect.x + self.rect.width*self.val
+        h = self.rect.y + self.rect.height
+        glBegin(GL_QUADS)
+        glVertex2f(self.rect.x,self.rect.y)
+        glVertex2f(w,self.rect.y)
+        glVertex2f(w,h)
+        glVertex2f(self.rect.x,h)
+        glEnd()
+        glColor3f(1,0,0)
+        glBegin(GL_TRIANGLE_FAN)
+        glVertex2f(w,self.rect.y+self.rect.height/2)
+        step = 2*math.pi/segments
+        rad = self.rect.height/2+3
+        for i in range(segments+1):
+            angle = i*step
+            x = w + rad*math.cos(angle)
+            y = self.rect.y + self.rect.height/2 + rad*math.sin(angle)
+            glVertex2f(x,y)
+        glEnd()

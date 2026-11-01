@@ -37,9 +37,11 @@ def main():
     start_button_2 = Classes.Button("GAME MODE",640,510,150,50)
     restart_button = Classes.Button("PLAY AGAIN",440,510,150,80)
     back = Classes.Button("BACK",0,0,80,40)
+    setting = Classes.Button("SETTINGS",0,0,150,40)
     welcome_text = Classes.Label("WELCOME TO RAY TRACER",50,200,80)
     game_over_text = Classes.Label("GAME OVER",300,300,80)
     level_text = Classes.Label("LEVEL 1",500,10,20)
+    speed_slider = Classes.Slider(50,100,400,30,val=0.5)
     while running:
         mouse_pos = pygame.mouse.get_pos()
         mouse_pos = Classes.Point(mouse_pos[0],mouse_pos[1])
@@ -80,6 +82,8 @@ def main():
                         if(not lv is None):
                             level = lv
                             level_text.change_text("LEVEL " + str(level))
+                    elif(setting.is_close(mouse_pos)):
+                        scene = 3
                 elif(scene==1):
                     if(event.button in (4,5,6,7)):
                         continue
@@ -118,6 +122,9 @@ def main():
                          level += 1
                          level_text.change_text("LEVEL " + str(level))
                          players = players[0].next_gen(players)
+                elif(scene==3):
+                    if(back.is_close(mouse_pos)):
+                        scene = 1
             elif event.type == pygame.MOUSEMOTION:
                 if(scene==1):
                     for shooter in shooters:
@@ -172,6 +179,7 @@ def main():
             start_button.draw()
             start_button_2.draw()
             welcome_text.draw()
+            setting.draw()
 
         elif(scene==1):
             back.draw()
@@ -242,6 +250,9 @@ def main():
         elif scene==2:
             restart_button.draw()
             game_over_text.draw()
+        elif scene==3:
+            back.draw()
+            speed_slider.draw()
         pygame.display.flip()
 
 def save(players,level,filename='save_file.pkl'):
@@ -257,7 +268,6 @@ def save(players,level,filename='save_file.pkl'):
     }
     with open(filename,'wb') as f:
         pickle.dump(save_data,f)
-    print("saved")
 
 def load(players,filename='save_file.pkl'):
     if not os.path.exists(filename):
@@ -272,7 +282,6 @@ def load(players,filename='save_file.pkl'):
     for i in range(min(len(players),len(brain_data))):
         players[i].brain.weights_ih = brain_data[i]['weights_ih']
         players[i].brain.weights_ho = brain_data[i]['weights_ho']
-    print("loaded")
     return level
     
 main()
