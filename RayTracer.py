@@ -31,7 +31,6 @@ def main():
     drags = []
     shooters = []
     mats = []
-    counter = 9
     players = []
     glClearColor(0.1,0.5,0.4,1.0)
     start_button = Classes.Button("SIMULATION MODE",280,510,200,50)
@@ -169,12 +168,9 @@ def main():
         elif(scene==1):
             if(states.game_mode==2):
                 level_text.draw()
-                if(counter==9):
-                    for player in players:
-                        if(player.is_alive):
-                            player.move(rays)
-                    counter = 0
-                counter += 1
+                for player in players:
+                    if(player.is_alive):
+                        player.move(rays)
             for mat in mats:
                 mat.draw()
             for drag in drags:

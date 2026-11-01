@@ -61,7 +61,7 @@ class Point:
 class Ray:
     def __init__(self,dir,size=10.0,pos=None,color=(0.8,0.2,0.4,1)):
         self.dir = Point(dir.x,dir.y).norm()
-        self.speed = 100
+        self.speed = 200
         self.size = size
         if(pos is None):
             self.start = Point(None,None)

@@ -5,3 +5,4 @@ dist
 __pycache__/Classes.cpython-312.pyc
 __pycache__/states.cpython-312.pyc
 *.pyc
+save_file.pkl
