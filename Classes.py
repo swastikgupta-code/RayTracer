@@ -469,7 +469,7 @@ class Player:
         self.step = states.speed/40
         self.color = col
         self.health = states.max_player_health
-        self.collider = Capsule(52,23,self.pos.add(Point(0,8)))
+        self.collider = Capsule(28,11,self.pos.add(Point(0,5)))
         self.brain = Brain(8,10,2)
         self.fitness = 0
         self.is_alive = True
