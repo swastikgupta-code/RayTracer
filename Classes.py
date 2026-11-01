@@ -532,7 +532,7 @@ class Player:
         champ_clone.brain = champ.brain.clone()
         new_pop.append(champ_clone)
 
-        for i in range(49):
+        for i in range(states.number-1):
             child = Player()
             child.brain = champ.brain.clone()
             child.brain.mutate()
@@ -713,12 +713,14 @@ class Brain:
         self.weights_ho += np.random.randn(*self.weights_ho.shape)*mutation_rate
 
 class Slider:
-    def __init__(self,x,y,width,height,val=0):
+    def __init__(self,x,y,width,height,min,max,val=0):
         self.rect = pygame.Rect(x,y,width,height)
         self.val = val
         self.cen = Point(self.rect.x + self.rect.width*self.val,self.rect.y + self.rect.height/2)
         self.rad = self.rect.height/2+3
         self.is_sliding = False
+        self.min = min
+        self.max = max
 
     def is_close(self,point):
         if(self.cen.dis(point)<self.rad):
@@ -731,7 +733,6 @@ class Slider:
             return
         self.val = val
         self.cen.x = point.x
-        states.speed = 40+320*self.val
 
     def draw(self,segments=60):
         w = self.rect.x + self.rect.width*self.val

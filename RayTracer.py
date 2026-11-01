@@ -41,8 +41,10 @@ def main():
     welcome_text = Classes.Label("WELCOME TO RAY TRACER",50,200,80)
     game_over_text = Classes.Label("GAME OVER",300,300,80)
     level_text = Classes.Label("LEVEL 1",500,10,20)
-    speed_slider = Classes.Slider(180,110,400,30,val=0.5)
+    speed_slider = Classes.Slider(180,110,400,30,40,360,val=0.5)
     speed_text = Classes.Label("SPEED: ",20,100,40)
+    number_slider = Classes.Slider(320,210,400,30,10,90,val=0.5)
+    number_text = Classes.Label("NO. OF PLAYER: ",20,200,40)
     while running:
         mouse_pos = pygame.mouse.get_pos()
         mouse_pos = Classes.Point(mouse_pos[0],mouse_pos[1])
@@ -77,7 +79,7 @@ def main():
                     elif(start_button_2.is_close(mouse_pos)):
                         scene = 1
                         states.game_mode = 2
-                        for i in range(50):
+                        for i in range(states.number):
                             players.append(Classes.Player())
                         lv = load(players)
                         if(not lv is None):
@@ -128,6 +130,8 @@ def main():
                         scene = 0
                     elif(speed_slider.is_close(mouse_pos)):
                         speed_slider.is_sliding = True
+                    elif(number_slider.is_close(mouse_pos)):
+                        number_slider.is_sliding = True
             elif event.type == pygame.MOUSEMOTION:
                 if(scene==1):
                     for shooter in shooters:
@@ -146,6 +150,10 @@ def main():
                 elif(scene==3):
                     if(speed_slider.is_sliding):
                         speed_slider.change_val(mouse_pos)
+                        states.speed = speed_slider.min+(speed_slider.max-speed_slider.min)*speed_slider.val
+                    elif(number_slider.is_sliding):
+                        number_slider.change_val(mouse_pos)
+                        states.number = int(number_slider.min + (number_slider.max-number_slider.min)*number_slider.val)
             elif(event.type==pygame.MOUSEBUTTONUP):
                 if(scene==1):
                     for drag_test in drags:
@@ -157,6 +165,7 @@ def main():
                         mat.dragging = False
                 elif(scene==3):
                     speed_slider.is_sliding = False
+                    number_slider.is_sliding = False
             elif event.type == pygame.KEYDOWN:
                 if(scene==1):
                     if event.key == pygame.K_DELETE:
@@ -262,6 +271,8 @@ def main():
             back.draw()
             speed_slider.draw()
             speed_text.draw()
+            number_slider.draw()
+            number_text.draw()
         pygame.display.flip()
 
 def save(players,level,filename='save_file.pkl'):
