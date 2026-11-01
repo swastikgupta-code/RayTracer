@@ -41,7 +41,8 @@ def main():
     welcome_text = Classes.Label("WELCOME TO RAY TRACER",50,200,80)
     game_over_text = Classes.Label("GAME OVER",300,300,80)
     level_text = Classes.Label("LEVEL 1",500,10,20)
-    speed_slider = Classes.Slider(50,100,400,30,val=0.5)
+    speed_slider = Classes.Slider(180,110,400,30,val=0.5)
+    speed_text = Classes.Label("SPEED: ",20,100,40)
     while running:
         mouse_pos = pygame.mouse.get_pos()
         mouse_pos = Classes.Point(mouse_pos[0],mouse_pos[1])
@@ -125,6 +126,8 @@ def main():
                 elif(scene==3):
                     if(back.is_close(mouse_pos)):
                         scene = 1
+                    elif(speed_slider.is_close(mouse_pos)):
+                        speed_slider.is_sliding = True
             elif event.type == pygame.MOUSEMOTION:
                 if(scene==1):
                     for shooter in shooters:
@@ -140,6 +143,9 @@ def main():
                             angle = drag_test.angle_bet([mouse_pos.x-drag_test.drag.mid.x,mouse_pos.y-drag_test.drag.mid.y],prev)
                             drag_test.rotate(angle)
                             prev = [mouse_pos.x-drag_test.drag.mid.x,mouse_pos.y-drag_test.drag.mid.y]
+                elif(scene==3):
+                    if(speed_slider.is_sliding):
+                        speed_slider.change_val(mouse_pos)
             elif(event.type==pygame.MOUSEBUTTONUP):
                 if(scene==1):
                     for drag_test in drags:
@@ -149,6 +155,8 @@ def main():
                         shooter.dragging = False
                     for mat in mats:
                         mat.dragging = False
+                elif(scene==3):
+                    speed_slider.is_sliding = False
             elif event.type == pygame.KEYDOWN:
                 if(scene==1):
                     if event.key == pygame.K_DELETE:
@@ -253,6 +261,7 @@ def main():
         elif scene==3:
             back.draw()
             speed_slider.draw()
+            speed_text.draw()
         pygame.display.flip()
 
 def save(players,level,filename='save_file.pkl'):

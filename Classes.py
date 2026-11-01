@@ -716,6 +716,21 @@ class Slider:
     def __init__(self,x,y,width,height,val=0):
         self.rect = pygame.Rect(x,y,width,height)
         self.val = val
+        self.cen = Point(self.rect.x + self.rect.width*self.val,self.rect.y + self.rect.height/2)
+        self.rad = self.rect.height/2+3
+        self.is_sliding = False
+
+    def is_close(self,point):
+        if(self.cen.dis(point)<self.rad):
+            return True
+        return False
+
+    def change_val(self,point):
+        val = (point.x-self.rect.x)/self.rect.width
+        if(val<0 or val>1):
+            return
+        self.val = val
+        self.cen.x = point.x
 
     def draw(self,segments=60):
         w = self.rect.x + self.rect.width*self.val
@@ -730,10 +745,9 @@ class Slider:
         glBegin(GL_TRIANGLE_FAN)
         glVertex2f(w,self.rect.y+self.rect.height/2)
         step = 2*math.pi/segments
-        rad = self.rect.height/2+3
         for i in range(segments+1):
             angle = i*step
-            x = w + rad*math.cos(angle)
-            y = self.rect.y + self.rect.height/2 + rad*math.sin(angle)
+            x = w + self.rad*math.cos(angle)
+            y = self.rect.y + self.rect.height/2 + self.rad*math.sin(angle)
             glVertex2f(x,y)
         glEnd()
